@@ -1,0 +1,38 @@
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 100%px;
+    z-index: 1;
+  }
+  
+  .slideshow {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .slideshow img {
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  
+  .slideshow img.active {
+    display: block;
+  }
+  
+  .prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .prev {
+    left: 10px;
+  }
+  
+  .next {
+    right: 10px;
+  }

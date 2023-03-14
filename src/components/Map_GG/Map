@@ -1,0 +1,79 @@
+import React, { useState, useRef } from "react";
+import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { Autocomplete } from "@yazanaabed/react-autocomplete";
+import TextField from "@material-ui/core/TextField";
+
+const libraries = ["places"];
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
+const defaultCenter = {
+  lat: 40.748817,
+  lng: -73.985428,
+};
+
+const Map = () => {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyAdi9sX_zo9V51U-CEqBrGCM3OKvqbhLtA",
+    libraries,
+  });
+
+  const [address, setAddress] = useState("");
+
+  const autocomplete = useRef(null);
+  const mapContainerRef = useRef(null);
+
+  const handlePlaceSelect = () => {
+    const addressObject = autocomplete.current.getPlace();
+    const address = addressObject.formatted_address;
+    setAddress(address);
+  };
+
+  const onMapLoad = () => {
+    const autocomplete = new window.google.maps.places.Autocomplete(
+      autocomplete.current,
+      { types: ["address"] }
+    );
+    autocomplete.bindTo("bounds", mapContainerRef.current);
+  };
+
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading Maps";
+
+  return (
+    <div>
+      <Autocomplete
+        id="place-autocomplete"
+        freeSolo
+        disableClearable
+        options={[]}
+        inputValue={address}
+        onChange={(event, newValue) => {
+          setAddress(newValue);
+        }}
+        onKeyPress={(event) => {
+          if (event.key === "Enter") {
+            handlePlaceSelect();
+          }
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Enter an address"
+            variant="outlined"
+            inputRef={autocomplete}
+          />
+        )}
+      />
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={13}
+        center={defaultCenter}
+        onLoad={onMapLoad}
+        mapContainerRef={mapContainerRef}
+      />
+    </div>
+    ); };
+
+    export default Map;
